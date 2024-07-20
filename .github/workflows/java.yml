@@ -1,0 +1,45 @@
+name: build java
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 0 1 * *"
+  push:
+    branches:
+      - master
+    paths:
+      - java/**
+jobs:
+  push:
+    name: "yolks:java_${{ matrix.tag }}"
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        tag:
+          - 8
+          - 11
+          - 16
+          - 17
+          - 18
+          - 19
+          - 21
+          - 22
+    steps:
+      - uses: actions/checkout@v3
+      - uses: docker/setup-qemu-action@v2
+      - uses: docker/setup-buildx-action@v2
+        with:
+          buildkitd-flags: --debug
+      - uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: docker/build-push-action@v4
+        with:
+          context: ./java
+          file: ./java/${{ matrix.tag }}/Dockerfile
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: |
+            ghcr.io/mcjars/pterodactyl-yolks:java_${{ matrix.tag }}
