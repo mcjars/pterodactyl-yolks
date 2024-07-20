@@ -37,6 +37,61 @@ cd /home/container || exit 1
 printf "\033[1m\033[33mcontainer@pterodactyl~ \033[0mjava -version\n"
 java -version
 
+if [[ "$AUTOMATIC_UPDATING" == "1" ]]; then
+	printf "\033[1m\033[33mcontainer@pterodactyl~ \033[0mChecking for updates...\n"
+
+	# Check if libraries/net/minecraftforge/forge exists
+	if [ -d "libraries/net/minecraftforge/forge" ] && [ -z "${HASH}" ]; then
+		# get first folder in libraries/net/minecraftforge/forge
+		FORGE_VERSION=$(ls libraries/net/minecraftforge/forge | head -n 1)
+
+		# Check if unix_args.txt exists in libraries/net/minecraftforge/forge/${FORGE_VERSION}
+		if [ -f "libraries/net/minecraftforge/forge/${FORGE_VERSION}/unix_args.txt" ]; then
+			HASH=$(sha256sum libraries/net/minecraftforge/forge/${FORGE_VERSION}/unix_args.txt | awk '{print $1}')
+		fi
+	fi
+
+	# Check if libraries/net/neoforged/neoforge folder exists
+	if [ -d "libraries/net/neoforged/neoforge" ] && [ -z "${HASH}" ]; then
+		# get first folder in libraries/net/neoforged/neoforge
+		NEOFORGE_VERSION=$(ls libraries/net/neoforged/neoforge | head -n 1)
+
+		# Check if unix_args.txt exists in libraries/net/neoforged/neoforge/${FORGE_VERSION}
+		if [ -f "libraries/net/neoforged/neoforge/${NEOFORGE_VERSION}/unix_args.txt" ]; then
+			HASH=$(sha256sum libraries/net/neoforged/neoforge/${NEOFORGE_VERSION}/unix_args.txt | awk '{print $1}')
+		fi
+	fi
+
+	# Hash server jar file
+	if [ -z "${HASH}" ]; then
+		HASH=$(sha256sum $SERVER_JARFILE | awk '{print $1}')
+	fi
+
+	# Check if hash is set
+	if [ -n "${HASH}" ]; then
+		API_RESPONSE=$(curl -s "https://versions.mcjars.app/api/v1/build/$HASH")
+
+		# Check if .success is true
+		if [ "$(echo $API_RESPONSE | jq -r '.success')" = "true" ]; then
+			# Check if .build.id is .latest.id
+			if [ "$(echo $API_RESPONSE | jq -r '.build.id')" != "$(echo $API_RESPONSE | jq -r '.latest.id')" ]; then
+				echo -e "\033[1m\033[33mcontainer@pterodactyl~ \033[0mNew build found. Updating server..."
+
+				$BUILD_ID=$(echo $API_RESPONSE | jq -r '.build.id')
+				bash <(curl -s "https://versions.mcjars.app/api/v1/script/$BUILD_ID/bash?echo=false")
+
+				echo -e "\033[1m\033[33mcontainer@pterodactyl~ \033[0mServer has been updated"
+			else
+				echo -e "\033[1m\033[33mcontainer@pterodactyl~ \033[0mServer is up to date"
+			fi
+		else
+			echo -e "\033[1m\033[33mcontainer@pterodactyl~ \033[0mCould not check for updates. Skipping update check."
+		fi
+	else
+		echo -e "\033[1m\033[33mcontainer@pterodactyl~ \033[0mCould not find hash. Skipping update check."
+	fi
+fi
+
 if [[ "$OVERRIDE_STARTUP" == "1" ]]; then
 	FLAGS=("-Dterminal.jline=false -Dterminal.ansi=true")
 
@@ -46,7 +101,7 @@ if [[ "$OVERRIDE_STARTUP" == "1" ]]; then
 
 	if [[ "$FLAGS" == "Aikar Flags" ]]; then
 		FLAGS+=("-XX:+AlwaysPreTouch -XX:+DisableExplicitGC -XX:+ParallelRefProcEnabled -XX:+PerfDisableSharedMem -XX:+UnlockExperimentalVMOptions -XX:+UseG1GC -XX:G1HeapRegionSize=8M -XX:G1HeapWastePercent=5 -XX:G1MaxNewSizePercent=40 -XX:G1MixedGCCountTarget=4 -XX:G1MixedGCLiveThresholdPercent=90 -XX:G1NewSizePercent=30 -XX:G1RSetUpdatingPauseTimePercent=5 -XX:G1ReservePercent=20 -XX:InitiatingHeapOccupancyPercent=15 -XX:MaxGCPauseMillis=200 -XX:MaxTenuringThreshold=1 -XX:SurvivorRatio=32 -Dusing.aikars.flags=https://mcflags.emc.gs -Daikars.new.flags=true")
-	elif [[ "$FLAGS" == "Velocity" ]]; then
+	elif [[ "$FLAGS" == "Velocity Flags" ]]; then
 		FLAGS+=("-XX:+AlwaysPreTouch -XX:+ParallelRefProcEnabled -XX:+UnlockExperimentalVMOptions -XX:+UseG1GC -XX:G1HeapRegionSize=4M -XX:MaxInlineLevel=15")
 	fi
 
@@ -59,7 +114,7 @@ if [[ "$OVERRIDE_STARTUP" == "1" ]]; then
 	fi
 
 	SERVER_MEMORY_REAL=$(($SERVER_MEMORY*$MAXIMUM_RAM/100))
-	PARSED="java ${FLAGS[*]} -Xms${SERVER_MEMORY_REAL} -Xmx${SERVER_MEMORY_REAL} -jar ${SERVER_JARFILE}"
+	PARSED="java ${FLAGS[*]} -Xms${SERVER_MEMORY_REAL}M -Xmx${SERVER_MEMORY_REAL}M -jar ${SERVER_JARFILE}"
 
 	# Display the command we're running in the output, and then execute it with the env
 	# from the container itself.
