@@ -38,7 +38,7 @@ printf "\033[1m\033[33mcontainer@pterodactyl~ \033[0mjava -version\n"
 java -version
 
 if [[ "$OVERRIDE_STARTUP" == "1" ]]; then
-	FLAGS=()
+	FLAGS=("-Dterminal.jline=false -Dterminal.ansi=true")
 
 	if [[ "$SIMD_OPERATIONS" == "1" ]]; then
 		FLAGS+=("--add-modules=jdk.incubator.vector")
@@ -51,7 +51,7 @@ if [[ "$OVERRIDE_STARTUP" == "1" ]]; then
 	fi
 
 	SERVER_MEMORY_REAL=(($SERVER_MEMORY*($MAXIMUM_RAM/100)))
-	PARSED="java ${FLAGS[*]} -Xms${SERVER_MEMORY} -Xmx${SERVER_MEMORY} ${JAVA_OPTS} -jar ${SERVER_JARFILE}"
+	PARSED="java ${FLAGS[*]} -Xms${SERVER_MEMORY_REAL} -Xmx${SERVER_MEMORY_REAL} ${JAVA_OPTS} -jar ${SERVER_JARFILE}"
 
 	# Display the command we're running in the output, and then execute it with the env
 	# from the container itself.
