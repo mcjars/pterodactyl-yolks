@@ -44,7 +44,7 @@ if [[ "$OVERRIDE_STARTUP" == "1" ]]; then
 		FLAGS+=("--add-modules=jdk.incubator.vector")
 	fi
 
-	if [[ "$FLAGS" == "Aikar's Flags" ]]; then
+	if [[ "$FLAGS" == "Aikar Flags" ]]; then
 		FLAGS+=("-XX:+AlwaysPreTouch -XX:+DisableExplicitGC -XX:+ParallelRefProcEnabled -XX:+PerfDisableSharedMem -XX:+UnlockExperimentalVMOptions -XX:+UseG1GC -XX:G1HeapRegionSize=8M -XX:G1HeapWastePercent=5 -XX:G1MaxNewSizePercent=40 -XX:G1MixedGCCountTarget=4 -XX:G1MixedGCLiveThresholdPercent=90 -XX:G1NewSizePercent=30 -XX:G1RSetUpdatingPauseTimePercent=5 -XX:G1ReservePercent=20 -XX:InitiatingHeapOccupancyPercent=15 -XX:MaxGCPauseMillis=200 -XX:MaxTenuringThreshold=1 -XX:SurvivorRatio=32 -Dusing.aikars.flags=https://mcflags.emc.gs -Daikars.new.flags=true")
 	elif [[ "$FLAGS" == "Velocity" ]]; then
 		FLAGS+=("-XX:+AlwaysPreTouch -XX:+ParallelRefProcEnabled -XX:+UnlockExperimentalVMOptions -XX:+UseG1GC -XX:G1HeapRegionSize=4M -XX:MaxInlineLevel=15")
@@ -58,8 +58,7 @@ if [[ "$OVERRIDE_STARTUP" == "1" ]]; then
 		FLAGS+=("-Dminecraft.api.auth.host=https://authserver.mojang.com/ -Dminecraft.api.account.host=https://api.mojang.com/ -Dminecraft.api.services.host=https://api.minecraftservices.com/ -Dminecraft.api.session.host=https://api.minehut.com/mitm/proxy")
 	fi
 
-	SERVER_MEMORY_MULTIPLIER=$(($MAXIMUM_RAM/100))
-	SERVER_MEMORY_REAL=$(($SERVER_MEMORY*$SERVER_MEMORY_MULTIPLIER))
+	SERVER_MEMORY_REAL=$(($SERVER_MEMORY*$MAXIMUM_RAM/100))
 	PARSED="java ${FLAGS[*]} -Xms${SERVER_MEMORY_REAL} -Xmx${SERVER_MEMORY_REAL} -jar ${SERVER_JARFILE}"
 
 	# Display the command we're running in the output, and then execute it with the env
