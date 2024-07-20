@@ -58,7 +58,7 @@ if [[ "$OVERRIDE_STARTUP" == "1" ]]; then
 		FLAGS+=("-Dminecraft.api.auth.host=https://authserver.mojang.com/ -Dminecraft.api.account.host=https://api.mojang.com/ -Dminecraft.api.services.host=https://api.minecraftservices.com/ -Dminecraft.api.session.host=https://api.minehut.com/mitm/proxy")
 	fi
 
-	SERVER_MEMORY_REAL=(($SERVER_MEMORY*($MAXIMUM_RAM/100)))
+	SERVER_MEMORY_REAL=$(($SERVER_MEMORY*($MAXIMUM_RAM/100)))
 	PARSED="java ${FLAGS[*]} -Xms${SERVER_MEMORY_REAL} -Xmx${SERVER_MEMORY_REAL} ${JAVA_OPTS} -jar ${SERVER_JARFILE}"
 
 	# Display the command we're running in the output, and then execute it with the env
