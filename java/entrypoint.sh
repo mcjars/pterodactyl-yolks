@@ -77,7 +77,7 @@ if [[ "$AUTOMATIC_UPDATING" == "1" ]]; then
 				echo -e "\033[1m\033[33mcontainer@pterodactyl~ \033[0mNew build found. Updating server..."
 
 				BUILD_ID=$(echo $API_RESPONSE | jq -r '.latest.id')
-				bash <(curl -s "https://versions.mcjars.app/api/v1/script/$BUILD_ID/bash?echo=false")
+				bash <(curl -s "https://versions.mcjars.app/api/v1/script/$BUILD_ID/bash?echo=false") > /dev/null
 
 				echo -e "\033[1m\033[33mcontainer@pterodactyl~ \033[0mServer has been updated"
 			else
