@@ -77,7 +77,7 @@ if [[ "$AUTOMATIC_UPDATING" == "1" ]]; then
 				echo -e "\033[1m\033[33mcontainer@pterodactyl~ \033[0mNew build found. Updating server..."
 
 				BUILD_ID=$(echo $API_RESPONSE | jq -r '.latest.id')
-				bash <(curl -s "https://versions.mcjars.app/api/v1/script/$BUILD_ID/bash?echo=false") > /dev/null
+				bash <(curl -s "https://versions.mcjars.app/api/v1/script/$BUILD_ID/bash?echo=false")
 
 				echo -e "\033[1m\033[33mcontainer@pterodactyl~ \033[0mServer has been updated"
 			else
@@ -99,9 +99,9 @@ if [[ "$OVERRIDE_STARTUP" == "1" ]]; then
 	fi
 
 	if [[ "$ADDITIONAL_FLAGS" == "Aikar's Flags" ]]; then
-		FLAGS+=("-XX:+AlwaysPreTouch -XX:+DisableExplicitGC -XX:+ParallelRefProcEnabled -XX:+PerfDisableSharedMem -XX:+UnlockExperimentalVMOptions -XX:+UseG1GC -XX:G1HeapRegionSize=8M -XX:G1HeapWastePercent=5 -XX:G1MaxNewSizePercent=40 -XX:G1MixedGCCountTarget=4 -XX:G1MixedGCLiveThresholdPercent=90 -XX:G1NewSizePercent=30 -XX:G1RSetUpdatingPauseTimePercent=5 -XX:G1ReservePercent=20 -XX:InitiatingHeapOccupancyPercent=15 -XX:MaxGCPauseMillis=200 -XX:MaxTenuringThreshold=1 -XX:SurvivorRatio=32 -Dusing.aikars.flags=https://mcflags.emc.gs -Daikars.new.flags=true")
+		FLAGS+=("-XX:+DisableExplicitGC -XX:+ParallelRefProcEnabled -XX:+PerfDisableSharedMem -XX:+UnlockExperimentalVMOptions -XX:+UseG1GC -XX:G1HeapRegionSize=8M -XX:G1HeapWastePercent=5 -XX:G1MaxNewSizePercent=40 -XX:G1MixedGCCountTarget=4 -XX:G1MixedGCLiveThresholdPercent=90 -XX:G1NewSizePercent=30 -XX:G1RSetUpdatingPauseTimePercent=5 -XX:G1ReservePercent=20 -XX:InitiatingHeapOccupancyPercent=15 -XX:MaxGCPauseMillis=200 -XX:MaxTenuringThreshold=1 -XX:SurvivorRatio=32 -Dusing.aikars.flags=https://mcflags.emc.gs -Daikars.new.flags=true")
 	elif [[ "$ADDITIONAL_FLAGS" == "Velocity Flags" ]]; then
-		FLAGS+=("-XX:+AlwaysPreTouch -XX:+ParallelRefProcEnabled -XX:+UnlockExperimentalVMOptions -XX:+UseG1GC -XX:G1HeapRegionSize=4M -XX:MaxInlineLevel=15")
+		FLAGS+=("-XX:+ParallelRefProcEnabled -XX:+UnlockExperimentalVMOptions -XX:+UseG1GC -XX:G1HeapRegionSize=4M -XX:MaxInlineLevel=15")
 	fi
 
 	if [[ "$MINEHUT_SUPPORT" == "Velocity" ]]; then
