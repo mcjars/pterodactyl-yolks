@@ -46,9 +46,16 @@ if [[ "$AUTOMATIC_UPDATING" == "1" ]]; then
 			# get first folder in libraries/net/minecraftforge/forge
 			FORGE_VERSION=$(ls libraries/net/minecraftforge/forge | head -n 1)
 
-			# Check if unix_args.txt exists in libraries/net/minecraftforge/forge/${FORGE_VERSION}
-			if [ -f "libraries/net/minecraftforge/forge/${FORGE_VERSION}/unix_args.txt" ]; then
-				HASH=$(sha256sum libraries/net/minecraftforge/forge/${FORGE_VERSION}/unix_args.txt | awk '{print $1}')
+			# Check if -server.jar or -universal.jar exists in libraries/net/minecraftforge/forge/${FORGE_VERSION}
+			FILES=$(ls libraries/net/minecraftforge/forge/${FORGE_VERSION} | grep -E "(-server.jar|-universal.jar)")
+
+			# Check if there are any files
+			if [ -n "${FILES}" ]; then
+				# get first file in libraries/net/minecraftforge/forge/${FORGE_VERSION}
+				FILE=$(echo "${FILES}" | head -n 1)
+
+				# Hash file
+				HASH=$(sha256sum libraries/net/minecraftforge/forge/${FORGE_VERSION}/${FILE} | awk '{print $1}')
 			fi
 		fi
 
@@ -57,9 +64,16 @@ if [[ "$AUTOMATIC_UPDATING" == "1" ]]; then
 			# get first folder in libraries/net/neoforged/neoforge
 			NEOFORGE_VERSION=$(ls libraries/net/neoforged/neoforge | head -n 1)
 
-			# Check if unix_args.txt exists in libraries/net/neoforged/neoforge/${FORGE_VERSION}
-			if [ -f "libraries/net/neoforged/neoforge/${NEOFORGE_VERSION}/unix_args.txt" ]; then
-				HASH=$(sha256sum libraries/net/neoforged/neoforge/${NEOFORGE_VERSION}/unix_args.txt | awk '{print $1}')
+			# Check if -server.jar or -universal.jar exists in libraries/net/neoforged/neoforge/${NEOFORGE_VERSION}
+			FILES=$(ls libraries/net/neoforged/neoforge/${NEOFORGE_VERSION} | grep -E "(-server.jar|-universal.jar)")
+
+			# Check if there are any files
+			if [ -n "${FILES}" ]; then
+				# get first file in libraries/net/neoforged/neoforge/${NEOFORGE_VERSION}
+				FILE=$(echo "${FILES}" | head -n 1)
+
+				# Hash file
+				HASH=$(sha256sum libraries/net/neoforged/neoforge/${NEOFORGE_VERSION}/${FILE} | awk '{print $1}')
 			fi
 		fi
 
@@ -93,6 +107,16 @@ if [[ "$AUTOMATIC_UPDATING" == "1" ]]; then
 	else
 		echo -e "\033[1m\033[33mcontainer@pterodactyl~ \033[0mAutomatic updating is enabled, but the server jar file is not server.jar. Skipping update check."
 	fi
+fi
+
+# check if libraries/net/minecraftforge/forge exists and no SERVER_JARFILE exists
+if [ -d "libraries/net/minecraftforge/forge" ] && [ -z "${SERVER_JARFILE}" ]; then 
+	curl https://s3.mcjars.app/forge/ForgeServerJAR.jar -o $SERVER_JARFILE
+fi
+
+# check if libraries/net/neoforged/neoforge exists and no SERVER_JARFILE exists
+if [ -d "libraries/net/neoforged/neoforge" ] && [ -z "${SERVER_JARFILE}" ]; then 
+	curl https://s3.mcjars.app/neoforge/NeoForgeServerJAR.jar -o $SERVER_JARFILE
 fi
 
 # server.properties
