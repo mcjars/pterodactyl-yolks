@@ -109,13 +109,13 @@ if [[ "$AUTOMATIC_UPDATING" == "1" ]]; then
 	fi
 fi
 
-# check if libraries/net/minecraftforge/forge exists and no SERVER_JARFILE exists
-if [ -d "libraries/net/minecraftforge/forge" ] && [ -z "${SERVER_JARFILE}" ]; then 
+# check if libraries/net/minecraftforge/forge exists and the SERVER_JARFILE file does not exist
+if [ -d "libraries/net/minecraftforge/forge" ] && [ ! -f "$SERVER_JARFILE" ]; then
 	curl https://s3.mcjars.app/forge/ForgeServerJAR.jar -o $SERVER_JARFILE
 fi
 
-# check if libraries/net/neoforged/neoforge exists and no SERVER_JARFILE exists
-if [ -d "libraries/net/neoforged/neoforge" ] && [ -z "${SERVER_JARFILE}" ]; then 
+# check if libraries/net/neoforged/neoforge exists and the SERVER_JARFILE file does not exist
+if [ -d "libraries/net/neoforged/neoforge" ] && [ ! -f "$SERVER_JARFILE" ]; then
 	curl https://s3.mcjars.app/neoforge/NeoForgeServerJAR.jar -o $SERVER_JARFILE
 fi
 
