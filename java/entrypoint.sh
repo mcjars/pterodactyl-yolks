@@ -111,12 +111,18 @@ fi
 
 # check if libraries/net/minecraftforge/forge exists and the SERVER_JARFILE file does not exist
 if [ -d "libraries/net/minecraftforge/forge" ] && [ ! -f "$SERVER_JARFILE" ]; then
-	curl https://s3.mcjars.app/forge/ForgeServerJAR.jar -o $SERVER_JARFILE
+	echo -e "\033[1m\033[33mcontainer@pterodactyl~ \033[0mDownloading Forge server jar file..."
+	curl -s https://s3.mcjars.app/forge/ForgeServerJAR.jar -o $SERVER_JARFILE
+
+	echo -e "\033[1m\033[33mcontainer@pterodactyl~ \033[0mForge server jar file has been downloaded"
 fi
 
 # check if libraries/net/neoforged/neoforge exists and the SERVER_JARFILE file does not exist
 if [ -d "libraries/net/neoforged/neoforge" ] && [ ! -f "$SERVER_JARFILE" ]; then
-	curl https://s3.mcjars.app/neoforge/NeoForgeServerJAR.jar -o $SERVER_JARFILE
+	echo -e "\033[1m\033[33mcontainer@pterodactyl~ \033[0mDownloading NeoForge server jar file..."
+	curl -s https://s3.mcjars.app/neoforge/NeoForgeServerJAR.jar -o $SERVER_JARFILE
+
+	echo -e "\033[1m\033[33mcontainer@pterodactyl~ \033[0mNeoForge server jar file has been downloaded"
 fi
 
 # server.properties
