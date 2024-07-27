@@ -95,6 +95,60 @@ if [[ "$AUTOMATIC_UPDATING" == "1" ]]; then
 	fi
 fi
 
+# server.properties
+touch server.properties
+if [ -f "server.properties" ]; then
+	# set server-ip to 0.0.0.0
+	if grep -q "server-ip=" server.properties; then
+		sed -i 's/server-ip=.*/server-ip=0.0.0.0/' server.properties
+	else
+		echo "server-ip=0.0.0.0" >> server.properties
+	fi
+
+	# set server-port to SERVER_PORT
+	if grep -q "server-port=" server.properties; then
+		sed -i "s/server-port=.*/server-port=${SERVER_PORT}/" server.properties
+	else
+		echo "server-port=${SERVER_PORT}" >> server.properties
+	fi
+
+	# set query.port to SERVER_PORT
+	if grep -q "query.port=" server.properties; then
+		sed -i "s/query.port=.*/query.port=${SERVER_PORT}/" server.properties
+	else
+		echo "query.port=${SERVER_PORT}" >> server.properties
+	fi
+fi
+
+# velocity.toml
+touch velocity.toml
+if [ -f "velocity.toml" ]; then
+	# set bind to 0.0.0.0:SERVER_PORT
+	if grep -q "bind" velocity.toml; then
+		sed -i "s/bind = .*/bind = \"0.0.0.0:${SERVER_PORT}\"/" velocity.toml
+	else
+		echo "bind = \"0.0.0.0:${SERVER_PORT}\"" >> velocity.toml
+	fi
+fi
+
+# config.yml
+touch config.yml
+if [ -f "config.yml" ]; then
+	# set query_port to SERVER_PORT
+	if grep -q "query_port" config.yml; then
+		sed -i "s/query_port: .*/query_port: ${SERVER_PORT}/" config.yml
+	else
+		echo "query_port: ${SERVER_PORT}" >> config.yml
+	fi
+
+	# set host to 0.0.0.0:SERVER_PORT
+	if grep -q "host" config.yml; then
+		sed -i "s/host: .*/host: 0.0.0.0:${SERVER_PORT}/" config.yml
+	else
+		echo "host: 0.0.0.0:${SERVER_PORT}" >> config.yml
+	fi
+fi
+
 if [[ "$OVERRIDE_STARTUP" == "1" ]]; then
 	FLAGS=("-Dterminal.jline=false -Dterminal.ansi=true")
 
