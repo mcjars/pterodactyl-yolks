@@ -23,7 +23,7 @@ java -version
 if [[ "$MALWARE_SCAN" == "1" ]]; then
 	echo -e "${LOG_PREFIX} Scanning for malware... (This may take a while)"
 
-	java -jar /MCAntiMalware.jar --scanDirectory .
+	java -jar /MCAntiMalware.jar --scanDirectory . --singleScan true --disableAutoUpdate true
 
 	if [ $? -eq 0 ]; then
 		echo -e "${LOG_PREFIX} Malware scan has passed"
