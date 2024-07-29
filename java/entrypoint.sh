@@ -10,7 +10,7 @@ export INTERNAL_IP
 
 # check if LOG_PREFIX is set
 if [ -z "$LOG_PREFIX" ]; then
-	LOG_PREFIX="\033[1m\033[33mcontainer@pterodactyl~ \033[0m"
+	LOG_PREFIX="\033[1m\033[33mcontainer@pterodactyl~\033[0m"
 fi
 
 # Switch to the container's working directory
@@ -23,7 +23,7 @@ java -version
 if [[ "$MALWARE_SCAN" == "1" ]]; then
 	echo -e "${LOG_PREFIX} Scanning for malware... (This may take a while)"
 
-	java -jar /MCAntiMalware.jar --scanDirectory
+	java -jar /MCAntiMalware.jar --scanDirectory .
 
 	if [ $? -eq 0 ]; then
 		echo -e "${LOG_PREFIX} Malware scan has passed"
