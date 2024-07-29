@@ -1,27 +1,5 @@
 #!/bin/bash
 
-#
-# Copyright (c) 2021 Matthew Penner
-#
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in all
-# copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-# SOFTWARE.
-#
-
 # Default the TZ environment variable to UTC.
 TZ=${TZ:-UTC}
 export TZ
@@ -30,16 +8,36 @@ export TZ
 INTERNAL_IP=$(ip route get 1 | awk '{print $(NF-2);exit}')
 export INTERNAL_IP
 
+# check if LOG_PREFIX is set
+if [ -z "$LOG_PREFIX" ]; then
+	LOG_PREFIX="\033[1m\033[33mcontainer@pterodactyl~ \033[0m"
+fi
+
 # Switch to the container's working directory
 cd /home/container || exit 1
 
 # Print Java version
-printf "\033[1m\033[33mcontainer@pterodactyl~ \033[0mjava -version\n"
+printf "${LOG_PREFIX} java -version\n"
 java -version
+
+if [[ "$MALWARE_SCAN" == "1" ]]; then
+	echo -e "${LOG_PREFIX} Scanning for malware... (This may take a while)"
+
+	java -jar /MCAntiMalware.jar --scanDirectory
+
+	if [ $? -eq 0 ]; then
+		echo -e "${LOG_PREFIX} Malware scan has passed"
+	else
+		echo -e "${LOG_PREFIX} Malware scan has failed"
+		exit 1
+	fi
+else
+	echo -e "${LOG_PREFIX} Skipping malware scan..."
+fi
 
 if [[ "$AUTOMATIC_UPDATING" == "1" ]]; then
 	if [[ "$SERVER_JARFILE" == "server.jar" ]]; then
-		printf "\033[1m\033[33mcontainer@pterodactyl~ \033[0mChecking for updates...\n"
+		printf "${LOG_PREFIX} Checking for updates...\n"
 
 		# Check if libraries/net/minecraftforge/forge exists
 		if [ -d "libraries/net/minecraftforge/forge" ] && [ -z "${HASH}" ]; then
@@ -89,40 +87,40 @@ if [[ "$AUTOMATIC_UPDATING" == "1" ]]; then
 			# Check if .success is true
 			if [ "$(echo $API_RESPONSE | jq -r '.success')" = "true" ]; then
 				if [ "$(echo $API_RESPONSE | jq -r '.build.id')" != "$(echo $API_RESPONSE | jq -r '.latest.id')" ]; then
-					echo -e "\033[1m\033[33mcontainer@pterodactyl~ \033[0mNew build found. Updating server..."
+					echo -e "${LOG_PREFIX} New build found. Updating server..."
 
 					BUILD_ID=$(echo $API_RESPONSE | jq -r '.latest.id')
 					bash <(curl -s "https://versions.mcjars.app/api/v1/script/$BUILD_ID/bash?echo=false")
 
-					echo -e "\033[1m\033[33mcontainer@pterodactyl~ \033[0mServer has been updated"
+					echo -e "${LOG_PREFIX} Server has been updated"
 				else
-					echo -e "\033[1m\033[33mcontainer@pterodactyl~ \033[0mServer is up to date"
+					echo -e "${LOG_PREFIX} Server is up to date"
 				fi
 			else
-				echo -e "\033[1m\033[33mcontainer@pterodactyl~ \033[0mCould not check for updates. Skipping update check."
+				echo -e "${LOG_PREFIX} Could not check for updates. Skipping update check."
 			fi
 		else
-			echo -e "\033[1m\033[33mcontainer@pterodactyl~ \033[0mCould not find hash. Skipping update check."
+			echo -e "${LOG_PREFIX} Could not find hash. Skipping update check."
 		fi
 	else
-		echo -e "\033[1m\033[33mcontainer@pterodactyl~ \033[0mAutomatic updating is enabled, but the server jar file is not server.jar. Skipping update check."
+		echo -e "${LOG_PREFIX} Automatic updating is enabled, but the server jar file is not server.jar. Skipping update check."
 	fi
 fi
 
 # check if libraries/net/minecraftforge/forge exists and the SERVER_JARFILE file does not exist
 if [ -d "libraries/net/minecraftforge/forge" ] && [ ! -f "$SERVER_JARFILE" ]; then
-	echo -e "\033[1m\033[33mcontainer@pterodactyl~ \033[0mDownloading Forge server jar file..."
+	echo -e "${LOG_PREFIX} Downloading Forge server jar file..."
 	curl -s https://s3.mcjars.app/forge/ForgeServerJAR.jar -o $SERVER_JARFILE
 
-	echo -e "\033[1m\033[33mcontainer@pterodactyl~ \033[0mForge server jar file has been downloaded"
+	echo -e "${LOG_PREFIX} Forge server jar file has been downloaded"
 fi
 
 # check if libraries/net/neoforged/neoforge exists and the SERVER_JARFILE file does not exist
 if [ -d "libraries/net/neoforged/neoforge" ] && [ ! -f "$SERVER_JARFILE" ]; then
-	echo -e "\033[1m\033[33mcontainer@pterodactyl~ \033[0mDownloading NeoForge server jar file..."
+	echo -e "${LOG_PREFIX} Downloading NeoForge server jar file..."
 	curl -s https://s3.mcjars.app/neoforge/NeoForgeServerJAR.jar -o $SERVER_JARFILE
 
-	echo -e "\033[1m\033[33mcontainer@pterodactyl~ \033[0mNeoForge server jar file has been downloaded"
+	echo -e "${LOG_PREFIX} NeoForge server jar file has been downloaded"
 fi
 
 # server.properties
@@ -205,7 +203,7 @@ if [[ "$OVERRIDE_STARTUP" == "1" ]]; then
 
 	# Display the command we're running in the output, and then execute it with the env
 	# from the container itself.
-	printf "\033[1m\033[33mcontainer@pterodactyl~ \033[0m%s\n" "$PARSED"
+	printf "${LOG_PREFIX} %s\n" "$PARSED"
 	# shellcheck disable=SC2086
 	exec env ${PARSED}
 else
@@ -216,7 +214,7 @@ else
 
 	# Display the command we're running in the output, and then execute it with the env
 	# from the container itself.
-	printf "\033[1m\033[33mcontainer@pterodactyl~ \033[0m%s\n" "$PARSED"
+	printf "${LOG_PREFIX} %s\n" "$PARSED"
 	# shellcheck disable=SC2086
 	exec env ${PARSED}
 fi
