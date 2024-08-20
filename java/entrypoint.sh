@@ -124,7 +124,6 @@ if [ -d "libraries/net/neoforged/neoforge" ] && [ ! -f "$SERVER_JARFILE" ]; then
 fi
 
 # server.properties
-touch server.properties
 if [ -f "server.properties" ]; then
 	# set server-ip to 0.0.0.0
 	if grep -q "server-ip=" server.properties; then
@@ -149,7 +148,6 @@ if [ -f "server.properties" ]; then
 fi
 
 # velocity.toml
-touch velocity.toml
 if [ -f "velocity.toml" ]; then
 	# set bind to 0.0.0.0:SERVER_PORT
 	if grep -q "bind" velocity.toml; then
@@ -160,7 +158,6 @@ if [ -f "velocity.toml" ]; then
 fi
 
 # config.yml
-touch config.yml
 if [ -f "config.yml" ]; then
 	# set query_port to SERVER_PORT
 	if grep -q "query_port" config.yml; then
