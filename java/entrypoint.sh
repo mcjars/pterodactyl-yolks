@@ -20,6 +20,8 @@ cd /home/container || exit 1
 printf "${LOG_PREFIX} java -version\n"
 java -version
 
+JAVA_MAJOR_VERSION=$(java -version 2>&1 | awk -F '"' '/version/ {print $2}' | awk -F '.' '{print $1}')
+
 if [[ "$MALWARE_SCAN" == "1" ]]; then
 	echo -e "${LOG_PREFIX} Scanning for malware... (This may take a while)"
 
@@ -177,8 +179,13 @@ fi
 if [[ "$OVERRIDE_STARTUP" == "1" ]]; then
 	FLAGS=("-Dterminal.jline=false -Dterminal.ansi=true")
 
+	# SIMD Operations are only for Java 16 - 21
 	if [[ "$SIMD_OPERATIONS" == "1" ]]; then
-		FLAGS+=("--add-modules=jdk.incubator.vector")
+		if [[ "$JAVA_MAJOR_VERSION" -ge 16 ]] && [[ "$JAVA_MAJOR_VERSION" -le 21 ]]; then
+			FLAGS+=("--add-modules=jdk.incubator.vector")
+		else
+			echo -e "${LOG_PREFIX} SIMD Operations are only available for Java 16 - 21, skipping..."
+		fi
 	fi
 
 	if [[ "$REMOVE_UPDATE_WARNING" == "1" ]]; then
