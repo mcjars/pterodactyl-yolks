@@ -192,6 +192,14 @@ if [[ "$OVERRIDE_STARTUP" == "1" ]]; then
 		FLAGS+=("-DIReallyKnowWhatIAmDoingISwear")
 	fi
 
+	if [[ -n "$JAVA_AGENT" ]]; then
+		if [ -f "$JAVA_AGENT" ]; then
+			FLAGS+=("-javaagent:$JAVA_AGENT")
+		else
+			echo -e "${LOG_PREFIX} JAVA_AGENT file does not exist, skipping..."
+		fi
+	fi
+
 	if [[ "$ADDITIONAL_FLAGS" == "Aikar's Flags" ]]; then
 		FLAGS+=("-XX:+DisableExplicitGC -XX:+ParallelRefProcEnabled -XX:+PerfDisableSharedMem -XX:+UnlockExperimentalVMOptions -XX:+UseG1GC -XX:G1HeapRegionSize=8M -XX:G1HeapWastePercent=5 -XX:G1MaxNewSizePercent=40 -XX:G1MixedGCCountTarget=4 -XX:G1MixedGCLiveThresholdPercent=90 -XX:G1NewSizePercent=30 -XX:G1RSetUpdatingPauseTimePercent=5 -XX:G1ReservePercent=20 -XX:InitiatingHeapOccupancyPercent=15 -XX:MaxGCPauseMillis=200 -XX:MaxTenuringThreshold=1 -XX:SurvivorRatio=32 -Dusing.aikars.flags=https://mcflags.emc.gs -Daikars.new.flags=true")
 	elif [[ "$ADDITIONAL_FLAGS" == "Velocity Flags" ]]; then
