@@ -125,6 +125,14 @@ if [ -d "libraries/net/neoforged/neoforge" ] && [ ! -f "$SERVER_JARFILE" ]; then
 	echo -e "${LOG_PREFIX} NeoForge server jar file has been downloaded"
 fi
 
+# check if libraries/net/neoforged/forge exists and the SERVER_JARFILE file does not exist
+if [ -d "libraries/net/neoforged/forge" ] && [ ! -f "$SERVER_JARFILE" ]; then
+	echo -e "${LOG_PREFIX} Downloading NeoForge server jar file..."
+	curl -s https://s3.mcjars.app/neoforge/NeoForgeServerJAR.jar -o $SERVER_JARFILE
+
+	echo -e "${LOG_PREFIX} NeoForge server jar file has been downloaded"
+fi
+
 # server.properties
 if [ -f "server.properties" ]; then
 	# set server-ip to 0.0.0.0
