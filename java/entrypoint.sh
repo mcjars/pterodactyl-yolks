@@ -134,6 +134,11 @@ if [ -d "libraries/net/neoforged/forge" ] && [ ! -f "$SERVER_JARFILE" ]; then
 fi
 
 # server.properties
+if [ -f "eula.txt" ]; then
+	# create server.properties
+	touch server.properties
+fi
+
 if [ -f "server.properties" ]; then
 	# set server-ip to 0.0.0.0
 	if grep -q "server-ip=" server.properties; then
