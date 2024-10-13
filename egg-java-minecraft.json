@@ -1,0 +1,164 @@
+{
+    "_comment": "DO NOT EDIT: FILE GENERATED AUTOMATICALLY BY PTERODACTYL PANEL - PTERODACTYL.IO",
+    "meta": {
+        "version": "PTDL_v2",
+        "update_url": null
+    },
+    "exported_at": "2024-10-13T12:50:35+02:00",
+    "name": "Java Minecraft",
+    "author": "rjansengd@gmail.com",
+    "description": "Minecraft is a game about placing blocks and going on adventures. Explore randomly generated worlds and build amazing things from the simplest of homes to the grandest of castles. Play in Creative Mode with unlimited resources or mine deep in Survival Mode, crafting weapons and armor to fend off dangerous mobs. Do all this alone or with friends.",
+    "features": [
+        "eula",
+        "java_version",
+        "pid_limit"
+    ],
+    "docker_images": {
+        "Java 23": "ghcr.io\/mcjars\/pterodactyl-yolks:java_23",
+        "Java 22": "ghcr.io\/mcjars\/pterodactyl-yolks:java_22",
+        "Java 21": "ghcr.io\/mcjars\/pterodactyl-yolks:java_21",
+        "Java 19": "ghcr.io\/mcjars\/pterodactyl-yolks:java_19",
+        "Java 18": "ghcr.io\/mcjars\/pterodactyl-yolks:java_18",
+        "Java 17": "ghcr.io\/mcjars\/pterodactyl-yolks:java_17",
+        "Java 16": "ghcr.io\/mcjars\/pterodactyl-yolks:java_16",
+        "Java 11": "ghcr.io\/mcjars\/pterodactyl-yolks:java_11",
+        "Java 8": "ghcr.io\/mcjars\/pterodactyl-yolks:java_8"
+    },
+    "file_denylist": [],
+    "startup": "java -Dterminal.jline=false -Dterminal.ansi=true -Xms256M -Xmx$(({{SERVER_MEMORY}}*{{MAXIMUM_RAM}}\/100))M -jar {{SERVER_JARFILE}}",
+    "config": {
+        "files": "{}",
+        "startup": "{\r\n    \"done\": [\r\n        \")! For help, type \",\r\n        \"Listening on \/\"\r\n    ]\r\n}",
+        "logs": "{}",
+        "stop": "^C"
+    },
+    "scripts": {
+        "installation": {
+            "script": "#!\/bin\/bash\r\n# MCJars API Installation Script\r\n#\r\n# Server Files: \/mnt\/server\r\nmkdir -p \/mnt\/server\r\ncd \/mnt\/server\r\n\r\napt install curl jq -y\r\n\r\nLATEST_VERSION=`curl -s \"https:\/\/versions.mcjars.app\/api\/v2\/builds\/$SOFTWARE\" | jq -r '.builds | to_entries | map(select(.value.type == \"RELEASE\")) | last | .key'`\r\nLATEST_BUILD=`curl -s \"https:\/\/versions.mcjars.app\/api\/v1\/builds\/$SOFTWARE\/$LATEST_VERSION\/latest\" | jq -r '.build.id'`\r\n\r\nbash <(curl -s \"https:\/\/versions.mcjars.app\/api\/v1\/script\/$LATEST_BUILD\/bash\")\r\n\r\necho \"DONE !!\"",
+            "container": "ghcr.io\/pterodactyl\/installers:debian",
+            "entrypoint": "bash"
+        }
+    },
+    "variables": [
+        {
+            "name": "Server Jar File",
+            "description": "The name of the server jarfile to run the server with.",
+            "env_variable": "SERVER_JARFILE",
+            "default_value": "server.jar",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|regex:\/^([\\w\\d._-]+)(\\.jar)$\/",
+            "field_type": "text"
+        },
+        {
+            "name": "Additional Flags",
+            "description": "This allows switching to additional flags like Aikar's Flags, recommended for usage on all bukkit-based Softwares (for example Paper, Purpur, ...)",
+            "env_variable": "ADDITIONAL_FLAGS",
+            "default_value": "None",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string|in:None,Aikar's Flags,Velocity Flags",
+            "field_type": "text"
+        },
+        {
+            "name": "Maximum Ram Percentage",
+            "description": "Decide how much of your servers ram to allocate for minecraft usage, on heavy modpacks you should keep this a bit lower than usual.",
+            "env_variable": "MAXIMUM_RAM",
+            "default_value": "90",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|int|min:50|max:100",
+            "field_type": "text"
+        },
+        {
+            "name": "Minehut Support",
+            "description": "Enable Minehut Support by adding all requires flags to forward player data.",
+            "env_variable": "MINEHUT_SUPPORT",
+            "default_value": "None",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string|in:None,Velocity,Waterfall,Bukkit",
+            "field_type": "text"
+        },
+        {
+            "name": "Log Prefix (Admin Only)",
+            "description": "",
+            "env_variable": "LOG_PREFIX",
+            "default_value": "\\033[1m\\033[33mcontainer@pterodactyl~\\033[0m",
+            "user_viewable": false,
+            "user_editable": false,
+            "rules": "required|string",
+            "field_type": "text"
+        },
+        {
+            "name": "Java Agent",
+            "description": "ADVANCED FEATURE: Set a custom java agent to use, useful for SWM or similar.",
+            "env_variable": "JAVA_AGENT",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|regex:\/^([\\w\\d._-]+)(\\.jar)$\/",
+            "field_type": "text"
+        },
+        {
+            "name": "Override Startup",
+            "description": "ADVANCED FEATURE: Override the displayed startup command to support all other variables, contact support to change.",
+            "env_variable": "OVERRIDE_STARTUP",
+            "default_value": "1",
+            "user_viewable": true,
+            "user_editable": false,
+            "rules": "required|boolean",
+            "field_type": "text"
+        },
+        {
+            "name": "Automatic Updating",
+            "description": "ADVANCED FEATURE: Automatically update your server software to the latest build available for the running version. This does not require using the Version Changer to install it. Do not use on modded servers.",
+            "env_variable": "AUTOMATIC_UPDATING",
+            "default_value": "0",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|boolean",
+            "field_type": "text"
+        },
+        {
+            "name": "SIMD Operations Support",
+            "description": "Add Support for SIMD Operations by adding --add-modules=jdk.incubator.vector, used in forks like Pufferfish or Purpur for improved map rendering performance. (Java 16-21)",
+            "env_variable": "SIMD_OPERATIONS",
+            "default_value": "0",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|boolean",
+            "field_type": "text"
+        },
+        {
+            "name": "Remove Update Warning",
+            "description": "Removes the 20 second spigot update warning by adding -DIReallyKnowWhatIAmDoingISwear to the startup flags",
+            "env_variable": "REMOVE_UPDATE_WARNING",
+            "default_value": "0",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|boolean",
+            "field_type": "text"
+        },
+        {
+            "name": "Malware Scan",
+            "description": "Toggle running a Malware Scan on Server Startup using https:\/\/github.com\/OpticFusion1\/MCAntiMalware.",
+            "env_variable": "MALWARE_SCAN",
+            "default_value": "0",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|boolean",
+            "field_type": "text"
+        },
+        {
+            "name": "Software",
+            "description": "The Software thats installed when the server gets reinstalled, mainly for use with billing panels, not users. (check https:\/\/versions.mcjars.app\/#model\/types) for all types!",
+            "env_variable": "SOFTWARE",
+            "default_value": "VANILLA",
+            "user_viewable": false,
+            "user_editable": false,
+            "rules": "required|string|max:20|uppercase",
+            "field_type": "text"
+        }
+    ]
+}
