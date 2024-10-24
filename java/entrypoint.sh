@@ -23,6 +23,12 @@ java -version
 JAVA_MAJOR_VERSION=$(java -version 2>&1 | awk -F '"' '/version/ {print $2}' | awk -F '.' '{print $1}')
 
 if [[ "$MALWARE_SCAN" == "1" ]]; then
+	# check if java version is lower than 17
+	if [[ "$JAVA_MAJOR_VERSION" -lt 17 ]]; then
+		echo -e "${LOG_PREFIX} Malware scanning is only available for Java 17 and above, skipping..."
+		MALWARE_SCAN=0
+	fi
+
 	echo -e "${LOG_PREFIX} Scanning for malware... (This may take a while)"
 
 	java -jar /MCAntiMalware.jar --scanDirectory . --singleScan true --disableAutoUpdate true
