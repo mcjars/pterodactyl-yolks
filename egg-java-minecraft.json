@@ -4,7 +4,7 @@
         "version": "PTDL_v2",
         "update_url": null
     },
-    "exported_at": "2024-10-13T12:50:35+02:00",
+    "exported_at": "2024-12-30T13:23:37+01:00",
     "name": "Java Minecraft",
     "author": "rjansengd@gmail.com",
     "description": "Minecraft is a game about placing blocks and going on adventures. Explore randomly generated worlds and build amazing things from the simplest of homes to the grandest of castles. Play in Creative Mode with unlimited resources or mine deep in Survival Mode, crafting weapons and armor to fend off dangerous mobs. Do all this alone or with friends.",
@@ -34,7 +34,7 @@
     },
     "scripts": {
         "installation": {
-            "script": "#!\/bin\/bash\r\n# MCJars API Installation Script\r\n#\r\n# Server Files: \/mnt\/server\r\nmkdir -p \/mnt\/server\r\ncd \/mnt\/server\r\n\r\napt install curl jq -y\r\n\r\nLATEST_VERSION=`curl -s \"https:\/\/versions.mcjars.app\/api\/v2\/builds\/$SOFTWARE\" | jq -r '.builds | to_entries | map(select(.value.type == \"RELEASE\")) | last | .key'`\r\nLATEST_BUILD=`curl -s \"https:\/\/versions.mcjars.app\/api\/v1\/builds\/$SOFTWARE\/$LATEST_VERSION\/latest\" | jq -r '.build.id'`\r\n\r\nbash <(curl -s \"https:\/\/versions.mcjars.app\/api\/v1\/script\/$LATEST_BUILD\/bash\")\r\n\r\necho \"DONE !!\"",
+            "script": "#!\/bin\/bash\r\n# MCJars API Installation Script\r\n#\r\n# Server Files: \/mnt\/server\r\nmkdir -p \/mnt\/server\r\ncd \/mnt\/server\r\n\r\napt install curl jq -y\r\n\r\nLATEST_BUILD=`curl -s \"https:\/\/versions.mcjars.app\/api\/v2\/builds\/$SOFTWARE?fields=id\" | jq -r '.builds | to_entries | map(select(.value.type == \"RELEASE\")) | last | .value.latest.id'`\r\n\r\nbash <(curl -s \"https:\/\/versions.mcjars.app\/api\/v1\/script\/$LATEST_BUILD\/bash\")\r\n\r\necho \"DONE !!\"",
             "container": "ghcr.io\/pterodactyl\/installers:debian",
             "entrypoint": "bash"
         }
