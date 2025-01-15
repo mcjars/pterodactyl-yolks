@@ -34,7 +34,7 @@
     },
     "scripts": {
         "installation": {
-            "script": "#!\/bin\/bash\r\n# MCJars API Installation Script\r\n#\r\n# Server Files: \/mnt\/server\r\nmkdir -p \/mnt\/server\r\ncd \/mnt\/server\r\n\r\napt install curl jq -y\r\n\r\nLATEST_BUILD=`curl -s \"https:\/\/versions.mcjars.app\/api\/v2\/builds\/$SOFTWARE?fields=id\" | jq -r '.builds | to_entries | map(select(.value.type == \"RELEASE\")) | last | .value.latest.id'`\r\n\r\nbash <(curl -s \"https:\/\/versions.mcjars.app\/api\/v1\/script\/$LATEST_BUILD\/bash\")\r\n\r\necho \"DONE !!\"",
+            "script": "#!\/bin\/bash\r\n# MCJars API Installation Script\r\n#\r\n# Server Files: \/mnt\/server\r\nmkdir -p \/mnt\/server\r\ncd \/mnt\/server\r\n\r\napt install curl jq -y\r\n\r\nVERSION=${VERSION:-latest}\r\nBUILD=${BUILD:-latest}\r\n\r\nif [ \"$VERSION\" == \"latest\" ]; then\r\n    VERSION=$(curl -s \"https:\/\/versions.mcjars.app\/api\/v2\/builds\/$SOFTWARE\" | jq -r '.builds | to_entries | map(select(.value.type == \"RELEASE\")) | last | .key')\r\nfi\r\n\r\nif [ \"$BUILD\" == \"latest\" ]; then\r\n    BUILD=$(curl -s \"https:\/\/versions.mcjars.app\/api\/v1\/builds\/$SOFTWARE\/$VERSION\/latest\" | jq -r '.build.id')\r\nfi\r\n\r\necho \"Software: $SOFTWARE\"\r\necho \"Version: $VERSION\"\r\necho \"Build: $BUILD\"\r\n\r\nbash <(curl -s \"https:\/\/versions.mcjars.app\/api\/v1\/script\/$BUILD\/bash\")\r\n\r\necho \"DONE !!\"",
             "container": "ghcr.io\/pterodactyl\/installers:debian",
             "entrypoint": "bash"
         }
@@ -155,9 +155,29 @@
             "description": "The Software thats installed when the server gets reinstalled, mainly for use with billing panels, not users. (check https:\/\/versions.mcjars.app\/#model\/types) for all types!",
             "env_variable": "SOFTWARE",
             "default_value": "VANILLA",
-            "user_viewable": false,
-            "user_editable": false,
+            "user_viewable": true,
+            "user_editable": true,
             "rules": "required|string|max:20|uppercase",
+            "field_type": "text"
+        },
+        {
+            "name": "Build",
+            "description": "",
+            "env_variable": "BUILD",
+            "default_value": "latest",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string",
+            "field_type": "text"
+        },
+        {
+            "name": "Version",
+            "description": "",
+            "env_variable": "VERSION",
+            "default_value": "latest",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string",
             "field_type": "text"
         }
     ]
