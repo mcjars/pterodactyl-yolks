@@ -167,7 +167,7 @@
             "default_value": "latest",
             "user_viewable": false,
             "user_editable": false,
-            "rules": "nullable|string",
+            "rules": "required|string",
             "field_type": "text"
         },
         {
@@ -177,7 +177,7 @@
             "default_value": "latest",
             "user_viewable": false,
             "user_editable": false,
-            "rules": "nullable|string",
+            "rules": "required|string",
             "field_type": "text"
         }
     ]
