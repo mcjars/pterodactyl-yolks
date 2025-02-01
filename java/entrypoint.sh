@@ -166,6 +166,19 @@ if [ -f "server.properties" ]; then
 	fi
 fi
 
+# settings.yml
+if [ -f "settings.yml" ]; then
+	# set ip to 0.0.0.0
+	if grep -q "ip" settings.yml; then
+		sed -i "s/ip: .*/ip: '0.0.0.0'/" settings.yml
+	fi
+
+	# set port to SERVER_PORT
+	if grep -q "port" settings.yml; then
+		sed -i "s/port: .*/port: ${SERVER_PORT}/" settings.yml
+	fi
+fi
+
 # velocity.toml
 if [ -f "velocity.toml" ]; then
 	# set bind to 0.0.0.0:SERVER_PORT
