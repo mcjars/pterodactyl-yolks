@@ -28,7 +28,7 @@
     "startup": "java -Dterminal.jline=false -Dterminal.ansi=true -Xms256M -Xmx$(({{SERVER_MEMORY}}*{{MAXIMUM_RAM}}\/100))M -jar {{SERVER_JARFILE}}",
     "config": {
         "files": "{}",
-        "startup": "{\r\n    \"done\": [\r\n        \")! For help, type \",\r\n        \"Listening on \/\"\r\n    ]\r\n}",
+        "startup": "{\r\n    \"done\": [\r\n        \")! For help, type \",\r\n        \"Listening on \/\",\r\n        \"Server started on\",\r\n        \"Limbo server listening on\"\r\n    ]\r\n}",
         "logs": "{}",
         "stop": "^C"
     },
