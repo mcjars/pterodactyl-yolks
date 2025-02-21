@@ -25,7 +25,7 @@
         "Java 8": "ghcr.io\/mcjars\/pterodactyl-yolks:java_8"
     },
     "file_denylist": [],
-    "startup": "java -Dterminal.jline=false -Dterminal.ansi=true -Xms256M -Xmx$(({{SERVER_MEMORY}}*{{MAXIMUM_RAM}}\/100))M -jar {{SERVER_JARFILE}}",
+    "startup": "java -Dterminal.jline=false -Dterminal.ansi=true -Xms256M -Xmx$(({{SERVER_MEMORY}}*{{MAXIMUM_RAM}}\/100))M -jar {{SERVER_JARFILE}} nogui",
     "config": {
         "files": "{}",
         "startup": "{\r\n    \"done\": [\r\n        \")! For help, type \",\r\n        \"Listening on \/\"\r\n    ]\r\n}",
