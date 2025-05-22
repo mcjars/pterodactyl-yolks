@@ -14,6 +14,7 @@
         "pid_limit"
     ],
     "docker_images": {
+        "Java 24": "ghcr.io\/mcjars\/pterodactyl-yolks:java_24",
         "Java 23": "ghcr.io\/mcjars\/pterodactyl-yolks:java_23",
         "Java 22": "ghcr.io\/mcjars\/pterodactyl-yolks:java_22",
         "Java 21": "ghcr.io\/mcjars\/pterodactyl-yolks:java_21",
