@@ -1,6 +1,6 @@
 # pterodactyl-yolks - MCJars Java Docker Images
 
-pterodactyl-yolks is a collection of Docker images for use with Pterodactyl Panel. These images are built on top of the official Docker images for Java, but with a few modifications to make them more suitable for use with the Official [Version Changer for Pterodactyl](https://www.sourcexchange.net/products/version-changer) addon. (Egg can be found in the root of this repository under `egg-java-minecraft.json`)
+`pterodactyl-yolks` is a collection of Docker images for use with Pterodactyl Panel. These images are built on top of the official Docker images for Java, but with a few modifications to make them more suitable for use with the Official [Minecraft Version Changer for Pterodactyl](https://www.sourcexchange.net/products/version-changer) addon. (The Egg can be found in the root of this repository under `egg-java-minecraft.json`, not compatible with pelican)
 
 ## Available Images
 
