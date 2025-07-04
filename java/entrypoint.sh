@@ -88,7 +88,7 @@ if [[ "$AUTOMATIC_UPDATING" == "1" ]]; then
 
 		# Check if hash is set
 		if [ -n "${HASH}" ]; then
-			API_RESPONSE=$(curl -s "https://versions.mcjars.app/api/v1/build/$HASH")
+			API_RESPONSE=$(curl --connect-timeout 4 -s "https://mcjars.app/api/v1/build/$HASH")
 
 			# Check if .success is true
 			if [ "$(echo $API_RESPONSE | jq -r '.success')" = "true" ]; then
@@ -96,7 +96,7 @@ if [[ "$AUTOMATIC_UPDATING" == "1" ]]; then
 					echo -e "${LOG_PREFIX} New build found. Updating server..."
 
 					BUILD_ID=$(echo $API_RESPONSE | jq -r '.latest.id')
-					bash <(curl -s "https://versions.mcjars.app/api/v1/script/$BUILD_ID/bash?echo=false")
+					bash <(curl -s "https://mcjars.app/api/v1/script/$BUILD_ID/bash?echo=false")
 
 					echo -e "${LOG_PREFIX} Server has been updated"
 				else
