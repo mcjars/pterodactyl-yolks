@@ -158,6 +158,13 @@ if [ -f "server.properties" ]; then
 		echo "server-port=${SERVER_PORT}" >> server.properties
 	fi
 
+	# set query.enabled to true
+	if grep -q "query.enabled=" server.properties; then
+		sed -i "s/query.enabled=.*/query.enabled=true/" server.properties
+	else
+		echo "query.enabled=true" >> server.properties
+	fi
+
 	# set query.port to SERVER_PORT
 	if grep -q "query.port=" server.properties; then
 		sed -i "s/query.port=.*/query.port=${SERVER_PORT}/" server.properties
