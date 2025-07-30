@@ -1,4 +1,4 @@
-FROM        --platform=$TARGETOS/$TARGETARCH eclipse-temurin:11.0.13_8-jdk-focal
+FROM        --platform=$TARGETOS/$TARGETARCH eclipse-temurin:11-jdk-focal
 
 LABEL       author="Robert Jansen" maintainer="rjansengd@gmail.com"
 
@@ -10,7 +10,7 @@ RUN         rm -rf /usr/bin/dd \
 						&& rm -rf /usr/bin/truncate \
 						&& rm -rf /usr/bin/xfs_mkfile
 
-RUN 				apt-get update -y \
+RUN 		apt-get update -y \
 						&& apt-get install -y jq unzip lsof ca-certificates openssl git tar sqlite3 fontconfig libfreetype6 tzdata iproute2 libstdc++6 \
 						&& useradd -d /home/container -m container
 
