@@ -23,7 +23,8 @@
         "Java 17": "ghcr.io\/mcjars\/pterodactyl-yolks:java_17",
         "Java 16": "ghcr.io\/mcjars\/pterodactyl-yolks:java_16",
         "Java 11": "ghcr.io\/mcjars\/pterodactyl-yolks:java_11",
-        "Java 8": "ghcr.io\/mcjars\/pterodactyl-yolks:java_8"
+        "Java 8": "ghcr.io\/mcjars\/pterodactyl-yolks:java_8",
+        "Java 7": "ghcr.io\/mcjars\/pterodactyl-yolks:java_7"
     },
     "file_denylist": [],
     "startup": "java -Dterminal.jline=false -Dterminal.ansi=true -Xms256M -Xmx$(({{SERVER_MEMORY}}*{{MAXIMUM_RAM}}\/100))M -jar {{SERVER_JARFILE}} nogui",

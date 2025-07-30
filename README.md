@@ -5,6 +5,8 @@
 ## Available Images
 
 * [`java`](https://github.com/mcjars/pterodactyl-yolks/tree/main/java)
+  * [`java7`](https://github.com/mcjars/pterodactyl-yolks/tree/main/java/7)
+    * `ghcr.io/mcjars/pterodactyl-yolks:java_7`
   * [`java8`](https://github.com/mcjars/pterodactyl-yolks/tree/main/java/8)
     * `ghcr.io/mcjars/pterodactyl-yolks:java_8`
   * [`java11`](https://github.com/mcjars/pterodactyl-yolks/tree/main/java/11)
