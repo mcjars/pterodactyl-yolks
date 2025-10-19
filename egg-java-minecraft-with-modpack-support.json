@@ -136,7 +136,7 @@
             "name": "Remove Update Warning",
             "description": "Removes the 20 second spigot update warning by adding -DIReallyKnowWhatIAmDoingISwear to the startup flags",
             "env_variable": "REMOVE_UPDATE_WARNING",
-            "default_value": "1",
+            "default_value": "0",
             "user_viewable": true,
             "user_editable": true,
             "rules": "required|boolean",
