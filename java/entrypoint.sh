@@ -248,7 +248,7 @@ if [[ "$OVERRIDE_STARTUP" == "1" ]]; then
 	elif [[ "$MINEHUT_SUPPORT" == "Waterfall" ]]; then
 		FLAGS+=("-Dwaterfall.auth.url=\"https://api.minehut.com/mitm/proxy/session/minecraft/hasJoined?username=%s&serverId=%s%s\")")
 	elif [[ "$MINEHUT_SUPPORT" = "Bukkit" ]]; then
-		FLAGS+=("-Dminecraft.api.auth.host=https://authserver.mojang.com/ -Dminecraft.api.account.host=https://api.mojang.com/ -Dminecraft.api.services.host=https://api.minecraftservices.com/ -Dminecraft.api.session.host=https://api.minehut.com/mitm/proxy")
+		FLAGS+=("-Dminecraft.api.auth.host=https://authserver.mojang.com/ -Dminecraft.api.account.host=https://api.mojang.com/ -Dminecraft.api.services.host=https://api.minecraftservices.com/ -Dminecraft.api.session.host=https://api.minehut.com/mitm/proxy -Dminecraft.api.profiles.host=https://api.mojang.com/")
 	fi
 
 	SERVER_MEMORY_REAL=$(($SERVER_MEMORY*$MAXIMUM_RAM/100))
