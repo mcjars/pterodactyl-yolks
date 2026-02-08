@@ -84,6 +84,16 @@
             "field_type": "text"
         },
         {
+            "name": "MineKeep Support",
+            "description": "Enable MineKeep Support by adding all requires flags to forward player data.",
+            "env_variable": "MINEKEEP_SUPPORT",
+            "default_value": "None",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string|in:None,Velocity,Waterfall,Bukkit",
+            "field_type": "text"
+        },
+        {
             "name": "Log Prefix (Admin Only)",
             "description": "",
             "env_variable": "LOG_PREFIX",
