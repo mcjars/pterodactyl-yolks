@@ -14,6 +14,7 @@
         "pid_limit"
     ],
     "docker_images": {
+        "Java 27": "ghcr.io\/mcjars\/pterodactyl-yolks:java_27",
         "Java 26": "ghcr.io\/mcjars\/pterodactyl-yolks:java_26",
         "Java 25": "ghcr.io\/mcjars\/pterodactyl-yolks:java_25",
         "Java 24": "ghcr.io\/mcjars\/pterodactyl-yolks:java_24",
@@ -125,7 +126,7 @@
         },
         {
             "name": "SIMD Operations Support",
-            "description": "Add Support for SIMD Operations by adding --add-modules=jdk.incubator.vector, used in forks like Pufferfish or Purpur for improved map rendering performance. (Java 16-21)",
+            "description": "Add Support for SIMD Operations by adding --add-modules=jdk.incubator.vector, used in forks like Pufferfish or Purpur for improved map rendering performance. (Java 16+)",
             "env_variable": "SIMD_OPERATIONS",
             "default_value": "0",
             "user_viewable": true,
